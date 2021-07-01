@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Card } from '../../components/Card';
 import { Layout } from '../../components/Layout';
+import { SearchInput } from '../../components/SearchInput';
 
 import { useLoading } from '../../hooks/useLoading';
 
@@ -9,7 +10,7 @@ import { api } from '../../services/api';
 import './styles.scss';
 
 
-export function Home() {
+function Home() {
 
     const { setLoading } = useLoading();
     
@@ -17,6 +18,7 @@ export function Home() {
     const [erro, setErro]         = useState(false);
     const [url, setURL]           = useState('https://pokeapi.co/api/v2/pokemon?offset=0&limit=12');
     const [pagination, setPagination]   = useState({next: '', previous: ''});
+    const [search, setSearch] = useState([]);
     
     const vUrlImagem = 'https://pokeres.bastionbot.org/images/pokemon/';
 
@@ -30,6 +32,9 @@ export function Home() {
     };
 
     useEffect(() =>  {
+
+        setLoading(true);
+        
             
         async function fetchData() {
             await api.get(url)
@@ -72,7 +77,17 @@ export function Home() {
         setLoading(false);
         
 
-      },[url, erro])
+      },[url, erro]);
+
+      //Effect responsavel pela pesquisa
+      useEffect(() =>  {
+         
+        if (search){
+              console.log(search);
+        }
+    
+
+      }, [search]);
 
     return (
         
@@ -81,33 +96,32 @@ export function Home() {
             <section id="first" className="main special">
 
                 <section className="main special">
-                    <form method="post" action="#">
-                        <div class="row gtr-uniform">
-                            <div className="col-12">
-                                <input type="text" name="demo-name" id="demo-name"  placeholder="Name" />
-                            </div>
-                        </div>
-                    </form>
+                    <SearchInput 
+                        value = {search}
+                        onChange = {(textoPesquisa) => setSearch(textoPesquisa)}    
+                    />
                 </section>
 
+                <section>
+                    <ul className="features">
+                        {pokemons.map(dados => 
+                            (
+                                <Card 
+                                    key = {dados.id}
+                                    imagem={`${vUrlImagem}${dados.id}.png`}
+                                    name = {dados.name}
+                                    id = {dados.id}
+                                />
+                            )
+                        )}
+                    </ul>
+                    
+                    <footer className="major">
+                        {pagination.previous && <button type='button' onClick={() => handlePagination(pagination.previous) }>Anterior</button>}
+                        {pagination.next && <button type='button' onClick={() => handlePagination(pagination.next) }>Próxima</button>}
+                    </footer>
 
-                <ul className="features">
-                    {pokemons.map(dados => 
-                        (
-                            <Card 
-                                key = {dados.id}
-                                imagem={`${vUrlImagem}${dados.id}.png`}
-                                name = {dados.name}
-                            />
-                        )
-                    )}
-                </ul>
-                
-
-                <footer className="major">
-                    {pagination.previous && <button type='button' onClick={() => handlePagination(pagination.previous) }>Anterior</button>}
-                    {pagination.next && <button type='button' onClick={() => handlePagination(pagination.next) }>Próxima</button>}
-                </footer>
+                </section>
 
             </section>
         </Layout>
@@ -115,3 +129,5 @@ export function Home() {
     )
 
 }
+
+export { Home };

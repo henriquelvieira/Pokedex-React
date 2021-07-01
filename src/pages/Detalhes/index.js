@@ -11,6 +11,7 @@ import { capitalizeText } from '../../services/utilities';
 import './styles.scss';
 
 export function Detalhes() {
+  
   //Pegar o valor do parametro ID da URL
   const params = useParams()
   const pokemonParam = params.id;
@@ -34,6 +35,8 @@ export function Detalhes() {
   }
 
   useEffect(() =>  {
+
+    setLoading(true);
        
     
     async function fetchData() { 
