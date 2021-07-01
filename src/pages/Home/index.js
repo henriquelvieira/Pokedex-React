@@ -1,36 +1,36 @@
 import { useEffect, useState } from 'react';
 import { Card } from '../../components/Card';
 import { Layout } from '../../components/Layout';
-//import { useHistory } from 'react-router-dom';
-//import { Tracing } from 'trace_events';
+
+import { useLoading } from '../../hooks/useLoading';
 
 import { api } from '../../services/api';
-
 
 import './styles.scss';
 
 
 export function Home() {
 
+    const { setLoading } = useLoading();
+    
     const [pokemons, setPokemons] = useState([]);
     const [erro, setErro]         = useState(false);
     const [url, setURL]           = useState('https://pokeapi.co/api/v2/pokemon?offset=0&limit=12');
     const [pagination, setPagination]   = useState({next: '', previous: ''});
     
-    let vUrlImagem = 'https://pokeres.bastionbot.org/images/pokemon/';
+    const vUrlImagem = 'https://pokeres.bastionbot.org/images/pokemon/';
 
     function handlePagination(urlPagination) {
         setURL(urlPagination);
     };
 
+    function LimpaCaracteres(vTexto){
+        const retorno = vTexto;
+        return retorno.replace('https://pokeapi.co/api/v2/pokemon/', '').replace('/', '')
+    };
+
     useEffect(() =>  {
             
-        function LimpaCaracteres(vTexto){
-            const retorno = vTexto;
-            return retorno.replace('https://pokeapi.co/api/v2/pokemon/', '').replace('/', '')
-        };
-        
-
         async function fetchData() {
             await api.get(url)
                      .then(response => {
@@ -50,7 +50,12 @@ export function Home() {
                                             setPokemons(parseResposta); 
                                             
                                             //Alimentar o State com a URL para a próxima página
-                                            setPagination({next: response.data.next, previous: response.data.previous})
+                                            setPagination(
+                                                            {
+                                                                next: response.data.next, 
+                                                                previous: response.data.previous
+                                                            }
+                                                        )
 
                                         };
 
@@ -63,15 +68,30 @@ export function Home() {
 
         fetchData();
         
+        //Desabilitar o loading (está dentro do componente Layout e é controlado pelo state loading (Context)
+        setLoading(false);
+        
 
       },[url, erro])
 
     return (
+        
         <Layout page_name= "Pokédex">
             
             <section id="first" className="main special">
 
-                <ul class="features">
+                <section className="main special">
+                    <form method="post" action="#">
+                        <div class="row gtr-uniform">
+                            <div className="col-12">
+                                <input type="text" name="demo-name" id="demo-name"  placeholder="Name" />
+                            </div>
+                        </div>
+                    </form>
+                </section>
+
+
+                <ul className="features">
                     {pokemons.map(dados => 
                         (
                             <Card 
@@ -82,6 +102,7 @@ export function Home() {
                         )
                     )}
                 </ul>
+                
 
                 <footer className="major">
                     {pagination.previous && <button type='button' onClick={() => handlePagination(pagination.previous) }>Anterior</button>}

@@ -3085,8 +3085,9 @@ input, select, textarea {
 			letter-spacing: -0.025em;
 		}
 
+		/*Posição do Header*/
 		#header.alt {
-			padding: 7em 5em 4em 5em ;
+			padding: 1em 5em 1em 5em ;
 		}
 
 			#header.alt h1 {
@@ -3581,7 +3582,7 @@ input, select, textarea {
 		}
 
 		#main > .main {
-			padding: 5em 5em 3em 5em ;
+			padding: 2em 5em 3em 5em ;
 			border-top: solid 1px #dddddd;
 		}
 

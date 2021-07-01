@@ -2,8 +2,7 @@ import { Link } from 'react-router-dom';
 import { capitalizeText } from '../../services/utilities';
 //import './styles.scss';
 
-
-
+/*
 function Card1({ 
     imagem, 
     name
@@ -39,7 +38,7 @@ function Card2({
           </article>
   )
 }
-
+*/
 function Card({ 
   imagem, 
   name

@@ -1,30 +1,32 @@
 import { useEffect, useState } from 'react';
 import { Link, useHistory, useParams } from 'react-router-dom';
-import { api } from '../../services/api';
-import { sleep } from '../../services/sleep';
 
-import './styles.scss';
+import { useLoading } from '../../hooks/useLoading';
+
+import { api } from '../../services/api';
+
 import { Layout } from '../../components/Layout';
 import { capitalizeText } from '../../services/utilities';
 
+import './styles.scss';
 
 export function Detalhes() {
   //Pegar o valor do parametro ID da URL
   const params = useParams()
   const pokemonParam = params.id;
 
+  const { setLoading } = useLoading();
+
   const [detalhes, setDetalhes]   = useState([]);
   const [abilities, setAbilities]   = useState([]);
   const [stats, setStats]   = useState([]);
   const [types, setTypes]   = useState([]);
 
-
-  
   //const [erro, setErro]         = useState(false);
   const [url]           = useState(`https://pokeapi.co/api/v2/pokemon/${pokemonParam}`);
   
   const history = useHistory();
-  let vUrlImagem = 'https://pokeres.bastionbot.org/images/pokemon/';
+  const vUrlImagem = 'https://pokeres.bastionbot.org/images/pokemon/';
 
 
   function handleVoltar() {
@@ -55,12 +57,8 @@ export function Detalhes() {
     };
 
     fetchData();
-
-    async function loading() {
-      await sleep(5000);
-    }
-
-    //loading();
+    //console.log(detalhes.name)
+    setLoading(false);
     
 
   },[url])
@@ -69,7 +67,6 @@ export function Detalhes() {
     return (
 
       <Layout >
-
         
         <section className="main">
 
@@ -88,45 +85,51 @@ export function Detalhes() {
                 </div>
 
                 <div className="col-6">
+                  
                   <ul className="alt">
                     <li>{`Base Experience: ${detalhes.base_experience}`}</li>
                     <li>{`Height: ${detalhes.height}`}</li>
                     <li>{`Weight: ${detalhes.weight}`}</li>
-                    <li>Tipo:
+                    <li>Tipo:<br /><br />
+                    
                       <ul className="actions small"> 
-                        {types.map(data => 
-                            (
-                                <li key= {data.type.name}><Link href="#" className="button primary small">{capitalizeText(data.type.name)}</Link></li>
+                        {types.map(data => (
+                                <li key= {data.type.name}>
+                                  <Link href="#" className="button primary small">
+                                    {capitalizeText(data.type.name)}
+                                  </Link>
+                                </li>
                             )
                         )}
                       </ul>
+
                     </li>
 
                   </ul>
                 </div>
 
                 <div className="col-4">
+
                   <h3>Habilidades</h3>
+
                   <ul className="alt">
-                    {abilities.map(data => 
-                            (
+                    {abilities.map(data => (
                                 <li key = {data.ability.name}>{capitalizeText(data.ability.name)}</li>
                             )
-                        )
-                    }
+                    )}
                   </ul>
                 </div>
 
 
                 <div className="col-8">
+
                   <h3>Estatisticas</h3>
+
                   <ul className="alt">
-                    {stats.map(data => 
-                                  (
+                    {stats.map(data => (
                                     <li>{capitalizeText(data.stat.name)} : {data.base_stat}</li>
                                   )
-                              )
-                      }
+                    )}
                   </ul>
 
                 </div>
@@ -139,11 +142,8 @@ export function Detalhes() {
           {pokemonParam && <button type='button' className='button primary' onClick={handleVoltar}>Voltar</button>}
         
         </section>
-        
-
 
       </Layout>
-
        
     )
 }

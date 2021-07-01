@@ -1,7 +1,14 @@
+import { useLoading } from '../../hooks/useLoading';
+
+
 function Layout({ 
     page_name,
     children, 
-  }) {
+}) {
+
+    //Importação do state loading e o Componente Loading do Hook useLoading
+    const { loading, Loading } = useLoading();
+    
     return (
         <div id="wrapper">
                 
@@ -13,6 +20,7 @@ function Layout({
                 )}
 
                 <div id="main">
+                    <Loading status = {loading}  />
                     {children}
                 </div>
 
