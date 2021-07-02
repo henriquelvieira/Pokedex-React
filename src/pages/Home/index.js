@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
-import {qs} from 'qs';
 
 import { Card } from '../../components/Card';
 import { Layout } from '../../components/Layout';
 import { SearchInput } from '../../components/SearchInput';
 import { Pagination } from '../../components/Pagination';
 import { useLoading } from '../../hooks/useLoading';
+import { usePagination } from '../../hooks/usePagination';
 
 import { api } from '../../services/api';
 
@@ -14,25 +14,22 @@ import './styles.scss';
 
 function Home() {
 
+    const URL_API = 'https://pokeapi.co/api/v2/pokemon';
+    const LIMIT = 16;
+    const vUrlImagem = 'https://pokeres.bastionbot.org/images/pokemon/';
+
     const { setLoading } = useLoading();
-    const LIMIT = 12;
+    const {offset, setOffset} = usePagination();
     
     const [pokemons, setPokemons] = useState([]);
     const [erro, setErro]         = useState(false);
-    const [url, setURL]           = useState(`https://pokeapi.co/api/v2/pokemon?offset=0&limit=${LIMIT}`);
     const [pagination, setPagination]   = useState({next: '', previous: '', total: ''});
     const [search, setSearch] = useState([]);
-    const [offset, setOffset] = useState(0);
     
-    const vUrlImagem = 'https://pokeres.bastionbot.org/images/pokemon/';
-
-    function handlePagination(urlPagination) {
-        setURL(urlPagination);
-    };
 
     function LimpaCaracteres(vTexto){
         const retorno = vTexto;
-        return retorno.replace('https://pokeapi.co/api/v2/pokemon/', '').replace('/', '')
+        return retorno.replace(`${URL_API}/`, '').replace('/', '')
     };
 
     useEffect(() =>  {
@@ -42,7 +39,7 @@ function Home() {
             
         async function fetchData() {
 
-
+            const url = `${URL_API}?offset=${offset}&limit=${LIMIT}`;
             await api.get(url)
                      .then(response => {
                                         const vStatusRetorno = JSON.stringify(response.status, null, 2);
@@ -84,7 +81,8 @@ function Home() {
         setLoading(false);
         
 
-      },[url, erro]);
+      },[offset, erro]);
+
 
       //Effect responsavel pela pesquisa
       useEffect(() =>  {
@@ -92,7 +90,6 @@ function Home() {
         if (search){
               console.log(search);
         }
-    
 
       }, [search]);
 
@@ -130,8 +127,6 @@ function Home() {
                             offset={offset}
                             setOffset={setOffset}
                         />
-                        {pagination.previous && <button type='button' onClick={() => handlePagination(pagination.previous) }>Anterior</button>}
-                        {pagination.next && <button type='button' onClick={() => handlePagination(pagination.next) }>Próxima</button>}
                     </footer>
 
                 </section>

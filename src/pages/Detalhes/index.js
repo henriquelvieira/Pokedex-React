@@ -74,7 +74,11 @@ export function Detalhes() {
         <section className="main">
 
           <header className="alt">
+  
+            {pokemonParam && <button type='button' className='button primary' onClick={handleVoltar}>Voltar</button>}
+
             <h1>#{detalhes.id} {capitalizeText(pokemonParam)}</h1>
+            
           </header>
 
 
