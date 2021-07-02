@@ -13,7 +13,7 @@ function Card({
               <span className="image"> 
                 <img src={imagem} alt={name} />
               </span>
-              <h3>#{id} {capitalizeText(name)}</h3>
+              <h3>{capitalizeText(name)}</h3>
             </Link>
         </li>
   )

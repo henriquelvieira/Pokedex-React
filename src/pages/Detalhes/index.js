@@ -74,7 +74,7 @@ export function Detalhes() {
         <section className="main">
 
           <header className="alt">
-            <h1>{capitalizeText(pokemonParam)}</h1>
+            <h1>#{detalhes.id} {capitalizeText(pokemonParam)}</h1>
           </header>
 
 

@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react';
+import {qs} from 'qs';
+
 import { Card } from '../../components/Card';
 import { Layout } from '../../components/Layout';
 import { SearchInput } from '../../components/SearchInput';
-
+import { Pagination } from '../../components/Pagination';
 import { useLoading } from '../../hooks/useLoading';
 
 import { api } from '../../services/api';
@@ -13,12 +15,14 @@ import './styles.scss';
 function Home() {
 
     const { setLoading } = useLoading();
+    const LIMIT = 12;
     
     const [pokemons, setPokemons] = useState([]);
     const [erro, setErro]         = useState(false);
-    const [url, setURL]           = useState('https://pokeapi.co/api/v2/pokemon?offset=0&limit=12');
-    const [pagination, setPagination]   = useState({next: '', previous: ''});
+    const [url, setURL]           = useState(`https://pokeapi.co/api/v2/pokemon?offset=0&limit=${LIMIT}`);
+    const [pagination, setPagination]   = useState({next: '', previous: '', total: ''});
     const [search, setSearch] = useState([]);
+    const [offset, setOffset] = useState(0);
     
     const vUrlImagem = 'https://pokeres.bastionbot.org/images/pokemon/';
 
@@ -37,6 +41,8 @@ function Home() {
         
             
         async function fetchData() {
+
+
             await api.get(url)
                      .then(response => {
                                         const vStatusRetorno = JSON.stringify(response.status, null, 2);
@@ -58,7 +64,8 @@ function Home() {
                                             setPagination(
                                                             {
                                                                 next: response.data.next, 
-                                                                previous: response.data.previous
+                                                                previous: response.data.previous,
+                                                                total:  response.data.count
                                                             }
                                                         )
 
@@ -116,7 +123,13 @@ function Home() {
                         )}
                     </ul>
                     
-                    <footer className="major">
+                    <footer >
+                        <Pagination 
+                            limit={LIMIT}
+                            total= {pagination.total}
+                            offset={offset}
+                            setOffset={setOffset}
+                        />
                         {pagination.previous && <button type='button' onClick={() => handlePagination(pagination.previous) }>Anterior</button>}
                         {pagination.next && <button type='button' onClick={() => handlePagination(pagination.next) }>Próxima</button>}
                     </footer>
