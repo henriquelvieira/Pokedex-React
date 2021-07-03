@@ -6,7 +6,7 @@ function SearchBar({value, onChange}) {
 
     return (
 
-            <div class="row gtr-uniform">
+            <div className="row gtr-uniform">
                 <div className="col-12">
                     <input 
                         type="text" 

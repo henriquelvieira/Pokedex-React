@@ -44,10 +44,24 @@ function Home() {
                                             
                                             if (vStatusRetorno === '200') {
                                                 const respostaAPI= response.data ?? {};
-                                                
-                                                console.log('aqui');
-                                                console.log(respostaAPI);
-                                                return respostaAPI;
+
+                                                const parseResposta = [{
+                                                    name: respostaAPI.name,
+                                                    id: respostaAPI.id
+                                                }];
+
+                                                //console.log(parseResposta);
+                                                if (parseResposta) {
+                                                    setPokemons(parseResposta);
+                                                    setPagination(
+                                                        {
+                                                            next: '', 
+                                                            previous: '',
+                                                            total:  pokemons.length
+                                                        }
+                                                    )
+
+                                                }
                                             };
 
                                         }
@@ -97,29 +111,24 @@ function Home() {
                  });
     };
 
-
+    
+    
+    //Effect responsavel pela pesquisa, carregando e paginação
     useEffect(() =>  {
-
-        setLoading(true);
         
-        getPokemons();
+        setLoading(true);
+
+        //Implementar debounced
+        if (search.length >=5 ){
+            searchPokemon(search);
+        } else if (search.length === 0){
+            getPokemons();
+        }
 
         //Desabilitar o loading (está dentro do componente Layout e é controlado pelo state loading (Context)
         setLoading(false);
-        
 
-      },[offset]);
-
-
-      //Effect responsavel pela pesquisa
-      useEffect(() =>  {
-         
-        if (search.length > 0){
-            console.log(search);
-            searchPokemon(search);
-        }
-
-      }, [search]);
+      }, [search, offset]);
 
     return (
         
