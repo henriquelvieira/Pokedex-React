@@ -1,4 +1,4 @@
-function SearchInput({value, onChange}) {
+function SearchBar({value, onChange}) {
 
     function handleChange(event) {
         onChange(event.target.value);
@@ -22,4 +22,4 @@ function SearchInput({value, onChange}) {
     )
 };
 
-export {SearchInput};
+export {SearchBar};

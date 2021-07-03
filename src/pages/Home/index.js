@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 
 import { Card } from '../../components/Card';
 import { Layout } from '../../components/Layout';
-import { SearchInput } from '../../components/SearchInput';
+import { SearchBar } from '../../components/SearchBar';
 import { Pagination } from '../../components/Pagination';
 import { useLoading } from '../../hooks/useLoading';
 import { usePagination } from '../../hooks/usePagination';
@@ -24,7 +24,7 @@ function Home() {
     const [pokemons, setPokemons] = useState([]);
     const [erro, setErro]         = useState(false);
     const [pagination, setPagination]   = useState({next: '', previous: '', total: ''});
-    const [search, setSearch] = useState([]);
+    const [search,  setSearch] = useState([]);
     
 
     function LimpaCaracteres(vTexto){
@@ -32,63 +32,91 @@ function Home() {
         return retorno.replace(`${URL_API}/`, '').replace('/', '')
     };
 
+    async function searchPokemon(pokemon) {
+
+        const url = `${URL_API}/${pokemon}`;
+        
+        if (pokemon){
+            
+            await api.get(url)
+                    .then(response => {
+                                            const vStatusRetorno = JSON.stringify(response.status, null, 2);
+                                            
+                                            if (vStatusRetorno === '200') {
+                                                const respostaAPI= response.data ?? {};
+                                                
+                                                console.log('aqui');
+                                                console.log(respostaAPI);
+                                                return respostaAPI;
+                                            };
+
+                                        }
+                    )
+                    .catch(error => {
+                        setErro(false);
+                    });
+            }
+    };
+
+
+    async function getPokemons() {
+
+        const url = `${URL_API}?offset=${offset}&limit=${LIMIT}`;
+        
+        await api.get(url)
+                 .then(response => {
+                                    const vStatusRetorno = JSON.stringify(response.status, null, 2);
+                                    
+                                    if (vStatusRetorno === '200') {
+                                        const respostaAPI= response.data.results ?? {};
+                                        const parseResposta = Object.entries(respostaAPI).map( ([key, value]) => {
+                                            return {
+                                                name: value.name,
+                                                id: LimpaCaracteres(value.url)
+                                            }
+                                        });
+
+                                        //Alimentar o State com a lista do Pokémons
+                                        setPokemons(parseResposta); 
+                                        
+                                        //Alimentar o State com a URL para a próxima página
+                                        setPagination(
+                                                        {
+                                                            next: response.data.next, 
+                                                            previous: response.data.previous,
+                                                            total:  response.data.count
+                                                        }
+                                                    )
+
+                                    };
+
+                                    }
+                )
+                 .catch(error => {
+                    setErro(false);
+                 });
+    };
+
+
     useEffect(() =>  {
 
         setLoading(true);
         
-            
-        async function fetchData() {
+        getPokemons();
 
-            const url = `${URL_API}?offset=${offset}&limit=${LIMIT}`;
-            await api.get(url)
-                     .then(response => {
-                                        const vStatusRetorno = JSON.stringify(response.status, null, 2);
-                                        
-                                        if (vStatusRetorno === '200') {
-                                            const respostaAPI= response.data.results ?? {};
-                                            const parseResposta = Object.entries(respostaAPI).map( ([key, value]) => {
-                                                return {
-                                                    name: value.name,
-                                                    url: value.url,
-                                                    id: LimpaCaracteres(value.url)
-                                                }
-                                            });
-
-                                            //Alimentar o State com a lista do Pokémons
-                                            setPokemons(parseResposta); 
-                                            
-                                            //Alimentar o State com a URL para a próxima página
-                                            setPagination(
-                                                            {
-                                                                next: response.data.next, 
-                                                                previous: response.data.previous,
-                                                                total:  response.data.count
-                                                            }
-                                                        )
-
-                                        };
-
-                                        }
-                    )
-                     .catch(error => {
-                        setErro(false);
-                     });
-        };
-
-        fetchData();
-        
         //Desabilitar o loading (está dentro do componente Layout e é controlado pelo state loading (Context)
         setLoading(false);
         
 
-      },[offset, erro]);
+      },[offset]);
 
 
       //Effect responsavel pela pesquisa
       useEffect(() =>  {
          
-        if (search){
-              console.log(search);
+        if (search.length > 0){
+            console.log(search);
+            searchPokemon(search);
         }
 
       }, [search]);
@@ -100,9 +128,9 @@ function Home() {
             <section id="first" className="main special">
 
                 <section className="main special">
-                    <SearchInput 
+                    <SearchBar 
                         value = {search}
-                        onChange = {(textoPesquisa) => setSearch(textoPesquisa)}    
+                        onChange = {(textoPesquisa) =>  setSearch(textoPesquisa)}    
                     />
                 </section>
 
@@ -120,14 +148,14 @@ function Home() {
                         )}
                     </ul>
                     
-                    <footer >
+                    <section>
                         <Pagination 
                             limit={LIMIT}
                             total= {pagination.total}
                             offset={offset}
                             setOffset={setOffset}
                         />
-                    </footer>
+                    </section>
 
                 </section>
 
