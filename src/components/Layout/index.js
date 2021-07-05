@@ -12,11 +12,10 @@ function Layout({
     return (
         <div id="wrapper">
                 
-                {page_name && (
-            
-                <header id="header" className="alt">
-                    <h1>{page_name}</h1>
-                </header>
+                {page_name && (           
+                    <header id="header" className="alt">
+                        <h1>{page_name}</h1>
+                    </header>
                 )}
 
                 <div id="main">

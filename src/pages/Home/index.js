@@ -118,8 +118,6 @@ function Home() {
             console.log('Aqui');
             getPokemons();
         }
-
-
         //Desabilitar o loading (está dentro do componente Layout e é controlado pelo state loading (Context)
 
       }, [search, offset]);
