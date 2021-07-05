@@ -8,6 +8,8 @@ import { LoadingContextProvider } from './contexts/LoadingContext';
 
 //Context usada na paginação para que ao voltar da página de detalhes para a principal o usuário continue na mesma página em que estava
 import { PaginationContextProvider } from './contexts/PaginationContext';  
+
+import { SearchContextProvider } from './contexts/SearchContext';  
 import './assets/css/main.css';
 
 function App() {
@@ -18,8 +20,10 @@ function App() {
         <Switch>
 
           <PaginationContextProvider> 
-            <Route path="/" exact={true} component={Home} />
-            <Route path="/pokemon/:id" component={Detalhes} />
+            <SearchContextProvider> 
+              <Route path="/" exact={true} component={Home} />
+              <Route path="/pokemon/:id" component={Detalhes} />
+            </SearchContextProvider>
           </PaginationContextProvider>
           
         </Switch>

@@ -4,8 +4,10 @@ import { Card } from '../../components/Card';
 import { Layout } from '../../components/Layout';
 import { SearchBar } from '../../components/SearchBar';
 import { Pagination } from '../../components/Pagination';
+
 import { useLoading } from '../../hooks/useLoading';
 import { usePagination } from '../../hooks/usePagination';
+import { useSearch } from '../../hooks/useSearch';
 
 import { api } from '../../services/api';
 
@@ -15,16 +17,17 @@ import './styles.scss';
 function Home() {
 
     const URL_API = 'https://pokeapi.co/api/v2/pokemon';
-    const LIMIT = 16;
     const vUrlImagem = 'https://pokeres.bastionbot.org/images/pokemon/';
+    const LIMIT_PAGE = 16;
 
     const { setLoading } = useLoading();
     const {offset, setOffset} = usePagination();
-    
+    const {search, setSearch} = useSearch();
+
     const [pokemons, setPokemons] = useState([]);
     const [erro, setErro]         = useState(false);
     const [pagination, setPagination]   = useState({next: '', previous: '', total: ''});
-    const [search,  setSearch] = useState([]);
+    //const [search,  setSearch] = useState([]);
     
 
     function LimpaCaracteres(vTexto){
@@ -33,10 +36,10 @@ function Home() {
     };
 
     async function searchPokemon(pokemon) {
-
-        const url = `${URL_API}/${pokemon}`;
+        const paramSearch = pokemon.toLowerCase().trim();
+        const url = `${URL_API}/${paramSearch}`;
         
-        if (pokemon){
+        if (paramSearch){
             
             await api.get(url)
                     .then(response => {
@@ -50,17 +53,8 @@ function Home() {
                                                     id: respostaAPI.id
                                                 }];
 
-                                                //console.log(parseResposta);
                                                 if (parseResposta) {
                                                     setPokemons(parseResposta);
-                                                    setPagination(
-                                                        {
-                                                            next: '', 
-                                                            previous: '',
-                                                            total:  pokemons.length
-                                                        }
-                                                    )
-
                                                 }
                                             };
 
@@ -75,34 +69,27 @@ function Home() {
 
     async function getPokemons() {
 
-        const url = `${URL_API}?offset=${offset}&limit=${LIMIT}`;
+        const url = `${URL_API}?offset=${offset}&limit=${LIMIT_PAGE}`;
         
         await api.get(url)
                  .then(response => {
-                                    const vStatusRetorno = JSON.stringify(response.status, null, 2);
-                                    
-                                    if (vStatusRetorno === '200') {
-                                        const respostaAPI= response.data.results ?? {};
-                                        const parseResposta = Object.entries(respostaAPI).map( ([key, value]) => {
-                                            return {
-                                                name: value.name,
-                                                id: LimpaCaracteres(value.url)
-                                            }
-                                        });
-
-                                        //Alimentar o State com a lista do Pokémons
-                                        setPokemons(parseResposta); 
+                                        const vStatusRetorno = JSON.stringify(response.status, null, 2);
                                         
-                                        //Alimentar o State com a URL para a próxima página
-                                        setPagination(
-                                                        {
-                                                            next: response.data.next, 
-                                                            previous: response.data.previous,
-                                                            total:  response.data.count
-                                                        }
-                                                    )
+                                        if (vStatusRetorno === '200') {
+                                            const respostaAPI= response.data.results ?? {};
+                                            const parseResposta = Object.entries(respostaAPI).map( ([key, value]) => {
+                                                return {
+                                                    name: value.name,
+                                                    id: LimpaCaracteres(value.url)
+                                                }
+                                            });
 
-                                    };
+                                            //Alimentar o State com a lista do Pokémons
+                                            setPokemons(parseResposta); 
+                                            
+                                            //Alimentar o State com a URL para a próxima página
+                                            setPagination({total:  response.data.count})
+                                        };
 
                                     }
                 )
@@ -118,10 +105,10 @@ function Home() {
         
         setLoading(true);
 
-        //Implementar debounced
-        if (search.length >=5 ){
+        if (search.length > 0) {
             searchPokemon(search);
         } else if (search.length === 0){
+            console.log('Aqui');
             getPokemons();
         }
 
@@ -136,14 +123,12 @@ function Home() {
             
             <section id="first" className="main special">
 
-                <section className="main special">
-                    <SearchBar 
-                        value = {search}
-                        onChange = {(textoPesquisa) =>  setSearch(textoPesquisa)}    
-                    />
-                </section>
+                <SearchBar 
+                    value = {search}
+                    onChange = {(textoPesquisa) =>  setSearch(textoPesquisa)}    
+                />
 
-                <section>
+                <section className="teste">
                     <ul className="features">
                         {pokemons.map(dados => 
                             (
@@ -156,15 +141,15 @@ function Home() {
                             )
                         )}
                     </ul>
-                    
-                    <section>
-                        <Pagination 
-                            limit={LIMIT}
-                            total= {pagination.total}
-                            offset={offset}
-                            setOffset={setOffset}
-                        />
-                    </section>
+
+                    {pokemons.length > 1 && (   
+                            <Pagination 
+                                limit={LIMIT_PAGE}
+                                total= {pagination.total}
+                                offset={offset}
+                                setOffset={setOffset}
+                            />
+                    )}
 
                 </section>
 

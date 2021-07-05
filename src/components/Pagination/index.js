@@ -13,7 +13,7 @@ function Pagination({limit, total, offset, setOffset}) {
 
 
     return(
-        <div className="col-12">
+        <section>
             <ul className="actions fit small">
                 <li>
                     <button 
@@ -49,7 +49,7 @@ function Pagination({limit, total, offset, setOffset}) {
                     >Próximo</button>
                 </li>
             </ul>
-        </div>
+        </section>
     )
 }
 
