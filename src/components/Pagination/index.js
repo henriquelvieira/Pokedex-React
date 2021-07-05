@@ -1,5 +1,9 @@
+import './styles.scss';
+
+
 const MAX_ITEMS = 5; //SEMPRE INFORMAR UM NÚMERO IMPAR
 const MAX_LEFT = (MAX_ITEMS - 1) / 2;
+
 
 function Pagination({limit, total, offset, setOffset}) {
 
@@ -14,8 +18,8 @@ function Pagination({limit, total, offset, setOffset}) {
 
     return(
         <section>
-            <ul className="actions fit small">
-                <li>
+            <ul className="actions fit custom">
+                <li> 
                     <button 
                         type="button"
                         onClick={ () => onPageChange(current-1) } 
@@ -28,7 +32,7 @@ function Pagination({limit, total, offset, setOffset}) {
                     Array.from( {length: Math.min(MAX_ITEMS, pages) })
                         .map((_, index) => index + first )
                         .map((page) => (
-                                <li key={page}>
+                                <li key={page} >
                                     <button 
                                         type="button"
                                         onClick={() => onPageChange(page) } 

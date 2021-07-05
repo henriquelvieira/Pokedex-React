@@ -128,7 +128,7 @@ function Home() {
                     onChange = {(textoPesquisa) =>  setSearch(textoPesquisa)}    
                 />
 
-                <section className="teste">
+                <section className="listagem">
                     <ul className="features">
                         {pokemons.map(dados => 
                             (
@@ -142,16 +142,17 @@ function Home() {
                         )}
                     </ul>
 
-                    {pokemons.length > 1 && (   
-                            <Pagination 
-                                limit={LIMIT_PAGE}
-                                total= {pagination.total}
-                                offset={offset}
-                                setOffset={setOffset}
-                            />
-                    )}
 
                 </section>
+
+                {pokemons.length > 1 && (   
+                        <Pagination 
+                            limit={LIMIT_PAGE}
+                            total= {pagination.total}
+                            offset={offset}
+                            setOffset={setOffset}
+                        />
+                )}
 
             </section>
         </Layout>
