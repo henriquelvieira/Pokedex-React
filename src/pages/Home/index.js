@@ -11,6 +11,8 @@ import { useSearch } from '../../hooks/useSearch';
 
 import { api } from '../../services/api';
 
+import {sleep} from '../../services/sleep';
+
 import './styles.scss';
 
 
@@ -39,6 +41,8 @@ function Home() {
         const paramSearch = pokemon.toLowerCase().trim();
         const url = `${URL_API}/${paramSearch}`;
         
+        await setLoading(true);
+        
         if (paramSearch){
             
             await api.get(url)
@@ -64,11 +68,13 @@ function Home() {
                         setErro(false);
                     });
             }
+        await setLoading(false);
     };
 
 
     async function getPokemons() {
-
+        
+        setLoading(true);
         const url = `${URL_API}?offset=${offset}&limit=${LIMIT_PAGE}`;
         
         await api.get(url)
@@ -96,14 +102,15 @@ function Home() {
                  .catch(error => {
                     setErro(false);
                  });
+        setLoading(false);
+
+        
     };
 
     
     
     //Effect responsavel pela pesquisa, carregando e paginação
     useEffect(() =>  {
-        
-        setLoading(true);
 
         if (search.length > 0) {
             searchPokemon(search);
@@ -112,8 +119,8 @@ function Home() {
             getPokemons();
         }
 
+
         //Desabilitar o loading (está dentro do componente Layout e é controlado pelo state loading (Context)
-        setLoading(false);
 
       }, [search, offset]);
 

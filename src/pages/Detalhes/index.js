@@ -32,37 +32,40 @@ export function Detalhes() {
 
   function handleVoltar() {
     history.push('/');
-  }
+  };
+
+
+  async function getPokemonData() { 
+      
+      setLoading(true);
+      
+      await api.get(url)
+               .then(response => {
+                                      const vStatusRetorno = JSON.stringify(response.status, null, 2);
+                                      const vRespota = response.data;
+                                    
+                                      if (vStatusRetorno === '200') {
+                                          setDetalhes(vRespota);
+                                          setAbilities(vRespota.abilities);
+                                          setStats(vRespota.stats);
+                                          setTypes(vRespota.types)  
+                                      };
+
+                                  }
+              )
+               .catch(error => {
+                  //setErro(false);
+               });
+
+      setLoading(false);
+      
+  };
+
+
 
   useEffect(() =>  {
-
-    setLoading(true);
-       
     
-    async function fetchData() { 
-        await api.get(url)
-                 .then(response => {
-                                        const vStatusRetorno = JSON.stringify(response.status, null, 2);
-                                        const vRespota = response.data;
-                                      
-                                        if (vStatusRetorno === '200') {
-                                            setDetalhes(vRespota);
-                                            setAbilities(vRespota.abilities);
-                                            setStats(vRespota.stats);
-                                            setTypes(vRespota.types)  
-                                        };
-
-                                    }
-                )
-                 .catch(error => {
-                    //setErro(false);
-                 });
-    };
-
-    fetchData();
-    //console.log(detalhes.name)
-    setLoading(false);
-    
+    getPokemonData();
 
   },[url])
 
