@@ -61,13 +61,24 @@ export function Detalhes() {
       
   };
 
+  function handleClick( id) {
+    alert(`Param = ${id}`)
+  };
 
+  function renderAbilities (data, index){
+    return (
+      <li key = {data.ability.name}>
+        {capitalizeText(data.ability.name)}
+        {/*<button onClick={(event) => handleClick(data.ability.name)}>Teste</button>*/}
+      </li>
+    )
+  }
 
   useEffect(() =>  {
     
     getPokemonData();
 
-  },[url])
+  },[url]);
 
 
     return (
@@ -129,11 +140,15 @@ export function Detalhes() {
                   <h3>Habilidades</h3>
 
                   <ul className="alt">
-                    {abilities.map(data => (
-                                <li key = {data.ability.name}>{capitalizeText(data.ability.name)}</li>
-                            )
-                    )}
+                    {abilities.map(renderAbilities)}
+                    {/*abilities.map(data => (
+                                  <li key = {data.ability.name}>{capitalizeText(data.ability.name)}</li>
+                              )
+                    )*/}
+
+                    
                   </ul>
+
                 </div>
 
 
@@ -143,7 +158,7 @@ export function Detalhes() {
 
                   <ul className="alt">
                     {stats.map(data => (
-                                    <li>{capitalizeText(data.stat.name)} : {data.base_stat}</li>
+                                    <li key={data.stat.name}>{capitalizeText(data.stat.name)} : {data.base_stat}</li>
                                   )
                     )}
                   </ul>
