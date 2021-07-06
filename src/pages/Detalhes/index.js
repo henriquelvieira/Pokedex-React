@@ -78,7 +78,9 @@ export function Detalhes() {
 
           <header className="alt">
   
-            {pokemonParam && <button type='button' className='button primary' onClick={handleVoltar}>Voltar</button>}
+            {pokemonParam && (
+              <button type='button' className='button primary' onClick={handleVoltar}>Voltar</button>
+            )}
 
             <h1>#{detalhes.id} {capitalizeText(pokemonParam)}</h1>
             
@@ -100,12 +102,16 @@ export function Detalhes() {
                     <li>{`Base Experience: ${detalhes.base_experience}`}</li>
                     <li>{`Height: ${detalhes.height}`}</li>
                     <li>{`Weight: ${detalhes.weight}`}</li>
+                    
                     <li>Tipo:<br /><br />
                     
                       <ul className="actions small"> 
                         {types.map(data => (
                                 <li key= {data.type.name}>
-                                  <Link href="#" className="button primary small">
+                                  <Link 
+                                    to={'/type='+data.type.name}
+                                    className={`button small background-color-${data.type.name}`}
+                                  >
                                     {capitalizeText(data.type.name)}
                                   </Link>
                                 </li>

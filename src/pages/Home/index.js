@@ -135,8 +135,7 @@ function Home() {
 
                 <section className="listagem">
                     <ul className="features">
-                        {pokemons.map(dados => 
-                            (
+                        {pokemons.map(dados => (
                                 <Card 
                                     key = {dados.id}
                                     imagem={`${vUrlImagem}${dados.id}.png`}
@@ -146,7 +145,6 @@ function Home() {
                             )
                         )}
                     </ul>
-
 
                 </section>
 
