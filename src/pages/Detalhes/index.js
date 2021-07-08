@@ -120,7 +120,7 @@ export function Detalhes() {
                         {types.map(data => (
                                 <li key= {data.type.name}>
                                   <Link 
-                                    to={'/type='+data.type.name}
+                                    to={'/type/'+data.type.name}
                                     className={`button small background-color-${data.type.name}`}
                                   >
                                     {capitalizeText(data.type.name)}

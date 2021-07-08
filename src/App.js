@@ -23,6 +23,7 @@ function App() {
             <SearchContextProvider> 
               <Route path="/" exact={true} component={Home} />
               <Route path="/pokemon/:id" component={Detalhes} />
+              <Route path="/type/:id" component={Home} />
             </SearchContextProvider>
           </PaginationContextProvider>
           

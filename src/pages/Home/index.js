@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
 
+import { Link, useHistory, useParams } from 'react-router-dom';
+
 import { Card } from '../../components/Card';
 import { Layout } from '../../components/Layout';
 import { SearchBar } from '../../components/SearchBar';
@@ -18,7 +20,11 @@ import './styles.scss';
 
 function Home() {
 
-    const URL_API = 'https://pokeapi.co/api/v2/pokemon';
+    //Pegar o valor do parametro ID da URL
+    const params = useParams()
+    const POKEMON_TYPE = params.id;
+
+    const URL_API = 'https://pokeapi.co/api/v2';
     const vUrlImagem = 'https://pokeres.bastionbot.org/images/pokemon/';
     const LIMIT_PAGE = 16;
 
@@ -34,12 +40,12 @@ function Home() {
 
     function LimpaCaracteres(vTexto){
         const retorno = vTexto;
-        return retorno.replace(`${URL_API}/`, '').replace('/', '')
+        return retorno.replace(`${URL_API}/pokemon/`, '').replace('/', '')
     };
 
     async function searchPokemon(pokemon) {
         const paramSearch = pokemon.toLowerCase().trim();
-        const url = `${URL_API}/${paramSearch}`;
+        const url = `${URL_API}/pokemon/${paramSearch}`;
         
         await setLoading(true);
         
@@ -75,23 +81,50 @@ function Home() {
     async function getPokemons() {
         
         setLoading(true);
-        const url = `${URL_API}?offset=${offset}&limit=${LIMIT_PAGE}`;
+
+         let url;  
+         let tipo_busca;
+        
+        if (POKEMON_TYPE) {
+            url = `${URL_API}/type/${POKEMON_TYPE}`;
+            tipo_busca = 'type';
+            alert('Aqui');
+        } else {
+            url = `${URL_API}/pokemon?offset=${offset}&limit=${LIMIT_PAGE}`;  
+            tipo_busca = 'all';
+        }
         
         await api.get(url)
                  .then(response => {
                                         const vStatusRetorno = JSON.stringify(response.status, null, 2);
                                         
                                         if (vStatusRetorno === '200') {
-                                            const respostaAPI= response.data.results ?? {};
-                                            const parseResposta = Object.entries(respostaAPI).map( ([key, value]) => {
-                                                return {
-                                                    name: value.name,
-                                                    id: LimpaCaracteres(value.url)
-                                                }
-                                            });
+                                            
+                                            if (tipo_busca === 'all') {                                 
+                                                const respostaAPI= response.data.results ?? {};
+                                                const parseResposta = Object.entries(respostaAPI).map( ([key, value]) => {
+                                                    return {
+                                                        name: value.name,
+                                                        id: LimpaCaracteres(value.url)
+                                                    }
+                                                });
 
-                                            //Alimentar o State com a lista do Pokémons
-                                            setPokemons(parseResposta); 
+                                                //Alimentar o State com a lista do Pokémons
+                                                setPokemons(parseResposta); 
+                                            } else {
+                                                const respostaAPI= response.data.pokemon ?? {};
+                                                const parseResposta = Object.entries(respostaAPI).map( ([key, value]) => {
+                                                    return {
+                                                        name: value.pokemon.name,
+                                                        id: LimpaCaracteres(value.pokemon.url)
+                                                    }
+                                                });
+                                                
+                                                //Alimentar o State com a lista do Pokémons
+                                                setPokemons(parseResposta); 
+
+                                            }
+
                                             
                                             //Alimentar o State com a URL para a próxima página
                                             setPagination({total:  response.data.count})
@@ -125,7 +158,7 @@ function Home() {
     return (
         
         <Layout page_name= "Pokédex">
-            
+            {POKEMON_TYPE}
             <section id="first" className="main special">
 
                 <SearchBar 

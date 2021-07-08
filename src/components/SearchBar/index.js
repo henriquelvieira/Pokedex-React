@@ -1,5 +1,10 @@
 import { useState } from 'react';
+import TextField from '@material-ui/core/TextField';
+import Autocomplete from '@material-ui/lab/Autocomplete';
+
 import { useDebounce } from '../../hooks/useDebounce';
+
+import { capitalizeText } from '../../services/utilities';
 
 import {pokemonsList} from './pokemonsList';
 
@@ -19,6 +24,8 @@ function SearchBar({value, onChange}) {
             <section className="main special">
                 <div className="row gtr-uniform">
                     <div className="col-12">
+                                                                  
+                        
                         <input 
                             type="text" 
                             name="demo-name" 
@@ -28,14 +35,16 @@ function SearchBar({value, onChange}) {
                             onChange={handleChange} 
                             list="browsers"
                         />
+                        
                         <datalist id="browsers">
                             {pokemonsList.map(dados => (
-                                <option value={dados.name} />
-                            )
+                                <option value={capitalizeText(dados.name)} />
+                                )
                             
                             )};
  
                         </datalist>
+                        
                     </div>
                 </div>
             </section>
