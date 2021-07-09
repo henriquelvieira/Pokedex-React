@@ -1,4 +1,8 @@
 import { useLoading } from '../../hooks/useLoading';
+import { Link } from 'react-router-dom';
+
+import logo from '../../assets/images/logo.svg';
+import './styles.scss';
 
 
 function Layout({ 
@@ -12,9 +16,11 @@ function Layout({
     return (
         <div id="wrapper">
                 
-                {page_name && (           
+                {page_name && (      
                     <header id="header" className="alt">
-                        <h1>{page_name}</h1>
+                        <Link to='/'>
+                            <img src={logo} alt='Pokémon Logo' />
+                        </Link>
                     </header>
                 )}
 

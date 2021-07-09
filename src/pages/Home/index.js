@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-import { Link, useHistory, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
 import { Card } from '../../components/Card';
 import { Layout } from '../../components/Layout';
@@ -13,7 +13,6 @@ import { useSearch } from '../../hooks/useSearch';
 
 import { api } from '../../services/api';
 
-import {sleep} from '../../services/sleep';
 
 import './styles.scss';
 
@@ -88,7 +87,6 @@ function Home() {
         if (POKEMON_TYPE) {
             url = `${URL_API}/type/${POKEMON_TYPE}`;
             tipo_busca = 'type';
-            alert('Aqui');
         } else {
             url = `${URL_API}/pokemon?offset=${offset}&limit=${LIMIT_PAGE}`;  
             tipo_busca = 'all';
@@ -119,7 +117,7 @@ function Home() {
                                                         id: LimpaCaracteres(value.pokemon.url)
                                                     }
                                                 });
-                                                
+
                                                 //Alimentar o State com a lista do Pokémons
                                                 setPokemons(parseResposta); 
 
@@ -158,7 +156,7 @@ function Home() {
     return (
         
         <Layout page_name= "Pokédex">
-            {POKEMON_TYPE}
+
             <section id="first" className="main special">
 
                 <SearchBar 

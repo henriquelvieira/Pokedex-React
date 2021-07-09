@@ -1,5 +1,6 @@
-import {BrowserRouter, Route, Switch} from 'react-router-dom';
+import {BrowserRouter, Route, Switch, Router} from 'react-router-dom';
 
+import history from './services/history';
 
 import { Home } from './pages/Home';
 import { Detalhes } from './pages/Detalhes';
@@ -15,22 +16,24 @@ import './assets/css/main.css';
 function App() {
 
   return (
-    <BrowserRouter>
-      <LoadingContextProvider>
-        <Switch>
+    <Router history={history}>
+      <BrowserRouter>
+        <LoadingContextProvider>
+          <Switch>
 
-          <PaginationContextProvider> 
-            <SearchContextProvider> 
-              <Route path="/" exact={true} component={Home} />
-              <Route path="/pokemon/:id" component={Detalhes} />
-              <Route path="/type/:id" component={Home} />
-            </SearchContextProvider>
-          </PaginationContextProvider>
-          
-        </Switch>
+            <PaginationContextProvider> 
+              <SearchContextProvider> 
+                <Route path="/" exact={true} component={Home} />
+                <Route path="/pokemon/:id" component={Detalhes} />
+                <Route path="/type/:id" component={Home} />
+              </SearchContextProvider>
+            </PaginationContextProvider>
+            
+          </Switch>
 
-      </LoadingContextProvider>
-    </BrowserRouter>
+        </LoadingContextProvider>
+      </BrowserRouter>
+    </Router>
 
   );
 }

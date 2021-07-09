@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link, useHistory, useParams } from 'react-router-dom';
 
+
 import { useLoading } from '../../hooks/useLoading';
 
 import { api } from '../../services/api';
@@ -31,7 +32,8 @@ export function Detalhes() {
 
 
   function handleVoltar() {
-    history.push('/');
+    //history.push('/');
+    history.goBack();
   };
 
 
@@ -104,7 +106,7 @@ export function Detalhes() {
               <div className="row gtr-uniform">
 
                 <div className="col-6">
-                  <img src={`${vUrlImagem}${detalhes.id}.png`} alt={detalhes.name} />
+                  <img src={`${vUrlImagem}${detalhes.id}.png`} alt={detalhes.name} className="pokemons" />
                 </div>
 
                 <div className="col-6">
