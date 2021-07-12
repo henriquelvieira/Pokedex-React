@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 
 import { Card } from '../../components/Card';
 import { Layout } from '../../components/Layout';
@@ -12,7 +12,7 @@ import { usePagination } from '../../hooks/usePagination';
 import { useSearch } from '../../hooks/useSearch';
 
 import { api } from '../../services/api';
-
+import { capitalizeText } from '../../services/utilities';
 
 import './styles.scss';
 
@@ -158,6 +158,18 @@ function Home() {
         <Layout page_name= "Pokédex">
 
             <section id="first" className="main special">
+
+
+                {POKEMON_TYPE && (
+                    
+                    <nav aria-label="breadcrumb">
+                        <ol className="breadcrumb">
+                        <li className="breadcrumb-item"><Link to="/">Home</Link></li>
+                        <li className="breadcrumb-item active" aria-current="page">{capitalizeText(POKEMON_TYPE)}</li>
+                        </ol>
+                  </nav>
+
+                )}
 
                 <SearchBar 
                     value = {search}
